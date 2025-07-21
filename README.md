@@ -39,12 +39,12 @@ TrustHive/
 │   ├── interface/                  # TypeScript type definitions
 │   │   ├── src/                    # Interface definitions
 │   │   ├── dist/                   # Compiled type declarations
-│   │   └── package.json            # Published as @trusthive/interface-types
+│   │   └── package.json            # Published as @anuragbhatt1805/trusthive-interface-types
 │   └── prisma/                     # Database layer
 │       ├── src/                    # Database utilities & services
 │       ├── schema.prisma           # Database schema definition
 │       ├── migrations/             # Database migration history
-│       └── package.json            # Published as @trusthive/prisma-config
+│       └── package.json            # Published as @anuragbhatt1805/trusthive-prisma-config
 ├── .github/workflows/              # CI/CD automation
 ├── scripts/                        # Build & deployment utilities
 ├── lerna.json                      # Monorepo configuration
@@ -92,18 +92,18 @@ yarn lerna:publish    # Publish packages to registry
 
 ### 2. Shared Package Architecture
 
-#### Interface Types (`@trusthive/interface-types`)
+#### Interface Types (`@anuragbhatt1805/trusthive-interface-types`)
 Central type definitions shared across all services:
 ```typescript
 // In any service
-import { LoginRequest, ApiResponse, User } from '@trusthive/interface-types';
+import { LoginRequest, ApiResponse, User } from '@anuragbhatt1805/trusthive-interface-types';
 ```
 
-#### Prisma Configuration (`@trusthive/prisma-config`)
+#### Prisma Configuration (`@anuragbhatt1805/trusthive-prisma-config`)
 Centralized database layer with services and utilities:
 ```typescript
 // In any service
-import { UserService, DatabaseUtils, prisma } from '@trusthive/prisma-config';
+import { UserService, DatabaseUtils, prisma } from '@anuragbhatt1805/trusthive-prisma-config';
 
 // Use pre-built service methods
 const user = await UserService.findUserByEmail('user@example.com');
@@ -181,7 +181,7 @@ export class UserService {
   static async createUser(data: Prisma.UserCreateInput): Promise<User> {
     return prisma.user.create({ data, include: { accounts: true } });
   }
-  
+
   static async findUserByEmail(email: string): Promise<User | null> {
     return prisma.user.findUnique({ where: { email } });
   }
@@ -264,7 +264,7 @@ graph TD
 
 #### NPM Packages
 - **Registry**: GitHub Package Registry
-- **Packages**: `@trusthive/interface-types`, `@trusthive/prisma-config`
+- **Packages**: `@anuragbhatt1805/trusthive-interface-types`, `@anuragbhatt1805/trusthive-prisma-config`
 - **Consumption**: Available for import in any service
 
 ## 💻 Development Workflow
@@ -335,7 +335,7 @@ mkdir -p payments/service
 
 - [ ] **Testing Framework**: Jest integration with coverage reporting
 - [ ] **API Documentation**: OpenAPI/Swagger specification
-- [ ] **Monitoring**: Prometheus metrics and Grafana dashboards  
+- [ ] **Monitoring**: Prometheus metrics and Grafana dashboards
 - [ ] **Security**: Dependabot, security scanning, OWASP compliance
 - [ ] **Performance**: Load testing, performance budgets
 - [ ] **Deployment**: Kubernetes manifests, Helm charts
@@ -382,9 +382,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Creator
 
-**Anurag Bhatt**  
-📧 Email: [anuragbhatt1805@gmail.com](mailto:anuragbhatt1805@gmail.com)  
-👔 Role: DevOps + Backend Engineer  
+**Anurag Bhatt**
+📧 Email: [anuragbhatt1805@gmail.com](mailto:anuragbhatt1805@gmail.com)
+👔 Role: DevOps + Backend Engineer
 
 *Passionate about building scalable, maintainable, and secure financial technology solutions using modern development practices and cloud-native architectures.*
 

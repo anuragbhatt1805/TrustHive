@@ -52,14 +52,14 @@ if [ ! -z "$NPM_TOKEN" ]; then
 @trusthive:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${NPM_TOKEN}
 EOF
-    
+
     echo "Created global .npmrc"
     if npm view express --registry=https://registry.npmjs.org >/dev/null 2>&1; then
         echo "✅ Can access public registry"
     else
         echo "❌ Cannot access public registry"
     fi
-    
+
     # Test with a command that doesn't require authentication first
     echo "Testing GitHub registry access..."
     if timeout 10 npm ping --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
@@ -76,26 +76,26 @@ if [ ! -z "$NPM_TOKEN" ]; then
 @trusthive:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${NPM_TOKEN}
 EOF
-    
+
     echo "Created local test .npmrc"
-    
+
     # Try to create a minimal package.json for testing
     cat > test-package.json << EOF
 {
-  "name": "@trusthive/test-auth",
+  "name": "@anuragbhatt1805/trusthive-test-auth",
   "version": "1.0.0",
   "description": "Test authentication",
   "main": "index.js"
 }
 EOF
-    
+
     echo "Testing with explicit userconfig..."
     if npm pack --userconfig=.npmrc.test --dry-run >/dev/null 2>&1; then
         echo "✅ npm with userconfig works"
     else
         echo "❌ npm with userconfig failed"
     fi
-    
+
     # Clean up
     rm -f .npmrc.test test-package.json
 fi

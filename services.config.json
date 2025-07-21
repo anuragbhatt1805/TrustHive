@@ -8,14 +8,14 @@
       "description": "Shared libraries and packages",
       "packages": [
         {
-          "name": "@trusthive/interface-types",
+          "name": "@anuragbhatt1805/trusthive-interface-types",
           "path": "common/interface",
           "type": "library",
           "publishable": true,
           "required_for_build": true
         },
         {
-          "name": "@trusthive/prisma-config", 
+          "name": "@anuragbhatt1805/trusthive-prisma-config",
           "path": "common/prisma",
           "type": "library",
           "publishable": true,
@@ -27,23 +27,23 @@
       "description": "Authentication services",
       "services": [
         {
-          "name": "@trusthive/auth-service",
-          "path": "auth/service", 
+          "name": "@anuragbhatt1805/trusthive-auth-service",
+          "path": "auth/service",
           "type": "docker",
           "dockerfile": "Dockerfile",
           "port": 3000,
           "dependencies": [
-            "@trusthive/interface-types",
-            "@trusthive/prisma-config"
+            "@anuragbhatt1805/trusthive-interface-types",
+            "@anuragbhatt1805/trusthive-prisma-config"
           ]
         },
         {
-          "name": "@trusthive/auth-lambda",
+          "name": "@anuragbhatt1805/trusthive-auth-lambda",
           "path": "auth/lambda",
           "type": "lambda",
           "runtime": "nodejs18.x",
           "dependencies": [
-            "@trusthive/interface-types"
+            "@anuragbhatt1805/trusthive-interface-types"
           ]
         }
       ]

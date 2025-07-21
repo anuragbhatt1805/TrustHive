@@ -1,9 +1,9 @@
-// Main export file for @trusthive/interface-types
+// Main export file for @anuragbhatt1805/trusthive-interface-types
 
 // Auth Service interfaces
 export * from './auth-service.interface';
 
-// Auth Lambda interfaces  
+// Auth Lambda interfaces
 export * from './auth-lambda.interface';
 
 // Common shared interfaces

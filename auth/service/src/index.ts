@@ -1,6 +1,6 @@
 import express from 'express';
-import { ApiResponse, LoginRequest, RegisterRequest } from '@trusthive/interface-types';
-import { UserService, DatabaseUtils, Validators } from '@trusthive/prisma-config';
+import { ApiResponse, LoginRequest, RegisterRequest } from '@anuragbhatt1805/trusthive-interface-types';
+import { UserService, DatabaseUtils, Validators } from '@anuragbhatt1805/trusthive-prisma-config';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,7 +12,7 @@ app.get('/', async (_req, res): Promise<void> => {
   const response: ApiResponse<{ service: string; database: typeof healthCheck }> = {
     success: true,
     message: 'Hello World from TrustHive Auth Service!',
-    data: { 
+    data: {
       service: 'auth-service',
       database: healthCheck
     },
@@ -23,7 +23,7 @@ app.get('/', async (_req, res): Promise<void> => {
 
 app.post('/login', async (req, res): Promise<void> => {
   const loginRequest: LoginRequest = req.body;
-  
+
   // Validate input
   const validation = Validators.validateLoginInput(loginRequest.email, loginRequest.password);
   if (!validation.valid) {
@@ -53,7 +53,7 @@ app.post('/login', async (req, res): Promise<void> => {
     const response: ApiResponse<{ token: string; user: { id: string; email: string; name?: string | null } }> = {
       success: true,
       message: 'Login successful',
-      data: { 
+      data: {
         token: 'mock-jwt-token', // In production, generate actual JWT
         user: {
           id: user.id,
@@ -63,7 +63,7 @@ app.post('/login', async (req, res): Promise<void> => {
       },
       timestamp: new Date().toISOString()
     };
-    
+
     res.json(response);
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -79,7 +79,7 @@ app.post('/login', async (req, res): Promise<void> => {
 
 app.post('/register', async (req, res): Promise<void> => {
   const registerRequest: RegisterRequest = req.body;
-  
+
   // Validate input
   const validation = Validators.validateRegistrationInput(registerRequest);
   if (!validation.valid) {
@@ -116,13 +116,13 @@ app.post('/register', async (req, res): Promise<void> => {
     const response: ApiResponse<{ userId: string; email: string }> = {
       success: true,
       message: 'Registration successful',
-      data: { 
+      data: {
         userId: user.id,
         email: user.email
       },
       timestamp: new Date().toISOString()
     };
-    
+
     res.json(response);
   } catch (error) {
     // eslint-disable-next-line no-console

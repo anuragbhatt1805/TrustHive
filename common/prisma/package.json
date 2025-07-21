@@ -1,6 +1,6 @@
 {
-  "name": "@trusthive/prisma-config",
-  "version": "1.7.0",
+  "name": "@anuragbhatt1805/trusthive-prisma-config",
+  "version": "1.6.0",
   "description": "Shared Prisma configuration and models for TrustHive microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

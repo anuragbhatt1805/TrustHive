@@ -37,8 +37,8 @@ Changes in any of these directories will bump ALL service versions:
 ### Service Packages
 
 These packages are considered services and will be versioned:
-- `auth/service` → `@trusthive/auth-service`
-- `auth/lambda` → `@trusthive/auth-lambda`
+- `auth/service` → `@anuragbhatt1805/trusthive-auth-service`
+- `auth/lambda` → `@anuragbhatt1805/trusthive-auth-lambda`
 
 ## 🚀 Usage Examples
 

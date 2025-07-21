@@ -36,7 +36,7 @@ graph TD
 
 ### 3. Package Publishing Order
 
-1. **Common Packages** (libraries): `@trusthive/interface-types`, `@trusthive/prisma-config`
+1. **Common Packages** (libraries): `@anuragbhatt1805/trusthive-interface-types`, `@anuragbhatt1805/trusthive-prisma-config`
 2. **Services**: Docker images and Lambda artifacts
 
 ### 4. Service Configuration
@@ -49,12 +49,12 @@ Services are automatically configured based on the `services.config.json` file a
     "auth": {
       "services": [
         {
-          "name": "@trusthive/auth-service",
-          "path": "auth/service", 
+          "name": "@anuragbhatt1805/trusthive-auth-service",
+          "path": "auth/service",
           "type": "docker"
         },
         {
-          "name": "@trusthive/auth-lambda",
+          "name": "@anuragbhatt1805/trusthive-auth-lambda",
           "path": "auth/lambda",
           "type": "lambda"
         }
@@ -83,7 +83,7 @@ To add new services, simply:
 2. **Configure package.json:**
    ```json
    {
-     "name": "@trusthive/new-service",
+     "name": "@anuragbhatt1805/trusthive-new-service",
      "version": "1.0.0",
      "private": false,
      "publishConfig": {
@@ -131,7 +131,7 @@ The Docker build includes retry mechanisms for package installation:
 ### Adding New Categories
 When adding services in new directories (e.g., `payment/`, `notification/`):
 1. Follow the same structure as `auth/`
-2. Ensure `package.json` has proper naming convention: `@trusthive/{service-name}`
+2. Ensure `package.json` has proper naming convention: `@anuragbhatt1805/trusthive-{service-name}`
 3. Set `"private": false` to include in builds
 
 ### GitHub Actions Matrix Limitations

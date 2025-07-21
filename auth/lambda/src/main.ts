@@ -7,7 +7,7 @@ import {
   LambdaRegisterRequest,
   LambdaValidateRequest,
   LambdaAuthUser
-} from '@trusthive/interface-types';
+} from '@anuragbhatt1805/trusthive-interface-types';
 
 // Mock data for now - in production, you could use a lightweight DB client
 // or call your auth service API endpoints
@@ -33,7 +33,7 @@ export const handleAuth = async (request: AuthLambdaRequest): Promise<AuthLambda
 
 const handleLogin = async (request: LambdaLoginRequest): Promise<AuthLambdaResponse> => {
   const { email, password } = request;
-  
+
   if (!email || !password) {
     return {
       statusCode: 400,
@@ -63,7 +63,7 @@ const handleLogin = async (request: LambdaLoginRequest): Promise<AuthLambdaRespo
     email: user.email,
     name: user.name
   };
-  
+
   return {
     statusCode: 200,
     message: 'Login successful',
@@ -76,7 +76,7 @@ const handleLogin = async (request: LambdaLoginRequest): Promise<AuthLambdaRespo
 
 const handleRegister = async (request: LambdaRegisterRequest): Promise<AuthLambdaResponse> => {
   const { email, password } = request;
-  
+
   if (!email || !password) {
     return {
       statusCode: 400,
@@ -109,7 +109,7 @@ const handleRegister = async (request: LambdaRegisterRequest): Promise<AuthLambd
     email,
     name: request.name
   };
-  
+
   return {
     statusCode: 201,
     message: 'Registration successful',
@@ -119,7 +119,7 @@ const handleRegister = async (request: LambdaRegisterRequest): Promise<AuthLambd
 
 const handleValidate = async (request: LambdaValidateRequest): Promise<AuthLambdaResponse> => {
   const { token } = request;
-  
+
   if (!token) {
     return {
       statusCode: 400,
@@ -133,7 +133,7 @@ const handleValidate = async (request: LambdaValidateRequest): Promise<AuthLambd
   // Mock token validation
   if (token === 'mock-jwt-token') {
     const user: LambdaAuthUser = { email: 'user@example.com' };
-    
+
     return {
       statusCode: 200,
       message: 'Token is valid',

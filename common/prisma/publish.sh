@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Publishing script for @trusthive/prisma-config
+# Publishing script for @anuragbhatt1805/trusthive-prisma-config
 
 echo "Building prisma package..."
 yarn build

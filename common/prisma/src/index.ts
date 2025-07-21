@@ -1,4 +1,4 @@
-// Main export file for @trusthive/prisma-config
+// Main export file for @anuragbhatt1805/trusthive-prisma-config
 
 // Export Prisma client
 export * from '../generated/client';

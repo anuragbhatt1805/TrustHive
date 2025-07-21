@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Publishing script for @trusthive/interface-types
+# Publishing script for @anuragbhatt1805/trusthive-interface-types
 
 echo "Building interface package..."
 yarn build

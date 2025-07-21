@@ -12,7 +12,7 @@ This document describes the automated CI/CD pipeline for the TrustHive monorepo.
 
 **Steps**:
 - ✅ Type checking with TypeScript
-- ✅ Linting with ESLint  
+- ✅ Linting with ESLint
 - ✅ Build all packages
 - ✅ Validate Lambda ZIP size (<10MB)
 - ✅ Test database connection
@@ -50,7 +50,7 @@ This document describes the automated CI/CD pipeline for the TrustHive monorepo.
 
 ### Docker Images
 - **Repository**: `ghcr.io/<owner>/trusthive-auth-service`
-- **Tags**: 
+- **Tags**:
   - `latest` (always latest version)
   - `v<version>` (specific version)
 
@@ -60,8 +60,8 @@ This document describes the automated CI/CD pipeline for the TrustHive monorepo.
 - **Retention**: 7 days
 
 ### NPM Packages
-- `@trusthive/interface-types` (GitHub Package Registry)
-- `@trusthive/prisma-config` (GitHub Package Registry)
+- `@anuragbhatt1805/trusthive-interface-types` (GitHub Package Registry)
+- `@anuragbhatt1805/trusthive-prisma-config` (GitHub Package Registry)
 
 ## 🏷️ Versioning Strategy
 

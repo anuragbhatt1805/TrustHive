@@ -42,8 +42,8 @@ if npm whoami --registry=https://npm.pkg.github.com 2>/dev/null; then
 else
     echo "⚠️ Authentication test failed, but this is normal for GitHub Package Registry"
     echo "Let's test by trying to view a package..."
-    
-    if npm view @trusthive/interface-types --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
+
+    if npm view @anuragbhatt1805/trusthive-interface-types --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
         echo "✅ Can access GitHub Package Registry!"
     else
         echo "❌ Cannot access GitHub Package Registry"

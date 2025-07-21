@@ -28,7 +28,7 @@ echo ""
 echo "🧪 Testing authentication by checking if we can view existing packages..."
 
 # Test authentication by trying to view a package
-if npm view @trusthive/interface-types --registry=https://npm.pkg.github.com --userconfig=.npmrc.test > /dev/null 2>&1; then
+if npm view @anuragbhatt1805/trusthive-interface-types --registry=https://npm.pkg.github.com --userconfig=.npmrc.test > /dev/null 2>&1; then
     echo "✅ Authentication works! Can access GitHub Package Registry"
 else
     echo "❌ Authentication failed or package doesn't exist"
