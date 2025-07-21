@@ -39,3 +39,4 @@ export {
   BaseEntity,
   HealthCheckResponse
 } from './common.interface';
+// Updated interface
