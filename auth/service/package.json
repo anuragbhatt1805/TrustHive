@@ -1,6 +1,6 @@
 {
-  "name": "@anuragbhatt1805/trusthive-auth-service",
-  "version": "1.7.0",
+  "name": "trusthive-auth-service",
+  "version": "1.6.0",
   "description": "Authentication Services for TrustHive",
   "main": "index.ts",
   "author": "Anurag Bhatt",

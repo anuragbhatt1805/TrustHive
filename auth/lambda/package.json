@@ -1,6 +1,6 @@
 {
-  "name": "@anuragbhatt1805/trusthive-auth-lambda",
-  "version": "1.5.0",
+  "name": "trusthive-auth-lambda",
+  "version": "1.4.0",
   "description": "Authentication Lambda Functions for TrustHive",
   "main": "index.js",
   "author": "Anurag Bhatt",
