@@ -6,6 +6,7 @@ echo "Building prisma package..."
 yarn build
 
 echo "Setting up GitHub Package Registry configuration..."
+
 # Create .npmrc temporarily for publishing
 cat > .npmrc << NPMRC_EOF
 @trusthive:registry=https://npm.pkg.github.com
