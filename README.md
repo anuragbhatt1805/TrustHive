@@ -1,7 +1,17 @@
 # 🏦 TrustHive - Open Source Banking Platform
 
-[![PR Validation](https://github.com/anuragbhatt1805/TrustHive/actions/workflows/pr-validation.yml/badge.svg)](https://github.com/anuragbhatt1805/TrustHive/actions/workflows/pr-validation.yml)
-[![Release](https://github.com/anuragbhatt1805/TrustHive/actions/workflows/release.yml/badge.svg)](https://github.com/anuragbhatt1805/TrustHive/actions/workflows/release.yml)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![AWS Lambda](https://img.shields.io/badge/AWS%20Lambda-FF9900?style=for-the-badge&logo=aws-lambda&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+![Yarn](https://img.shields.io/badge/Yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)
+![Lerna](https://img.shields.io/badge/Lerna-9333EA?style=for-the-badge&logo=lerna&logoColor=white)
+![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white)
 
 A modern, scalable microservices-based banking platform built with TypeScript, featuring automated CI/CD, containerization, and enterprise-grade architecture patterns.
 
@@ -211,6 +221,9 @@ yarn lerna:version
 ```
 
 ## 🚀 CI/CD Pipeline
+
+[![PR Validation](https://github.com/anuragbhatt1805/TrustHive/actions/workflows/pr-validation.yml/badge.svg)](https://github.com/anuragbhatt1805/TrustHive/actions/workflows/pr-validation.yml)
+[![Release](https://github.com/anuragbhatt1805/TrustHive/actions/workflows/release.yml/badge.svg)](https://github.com/anuragbhatt1805/TrustHive/actions/workflows/release.yml)
 
 ### 1. Pull Request Validation
 ```mermaid
