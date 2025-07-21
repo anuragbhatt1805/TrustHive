@@ -1,0 +1,35 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "independent",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "packages": [
+    "auth/*",
+    "common/*"
+  ],
+  "command": {
+    "version": {
+      "allowBranch": ["main", "master", "develop"],
+      "conventionalCommits": true,
+      "message": "chore(release): publish packages [skip ci]",
+      "createRelease": "github",
+      "ignoreChanges": [
+        "**/*.md",
+        "**/test/**",
+        "**/tests/**",
+        "**/__tests__/**",
+        "**/stories/**"
+      ],
+      "forcePublish": "*"
+    },
+    "publish": {
+      "registry": "https://npm.pkg.github.com",
+      "ignoreChanges": [
+        "**/*.md",
+        "**/test/**",
+        "**/tests/**",
+        "**/__tests__/**"
+      ]
+    }
+  }
+}

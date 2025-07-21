@@ -15,10 +15,16 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "lerna:version": "node scripts/lerna-version-custom.js",
+    "lerna:list": "node scripts/lerna-list-services.js",
+    "lerna:publish": "lerna publish from-package --registry https://npm.pkg.github.com",
+    "lerna:changed": "lerna changed",
+    "version:bump": "node scripts/version-services.js"
   },
   "devDependencies": {
-    "turbo": "^2.5.5"
+    "turbo": "^2.5.5",
+    "lerna": "^8.2.3"
   },
   "packageManager": "yarn@1.22.19"
 }

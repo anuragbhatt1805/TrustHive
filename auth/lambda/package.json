@@ -6,6 +6,13 @@
   "author": "Anurag Bhatt",
   "license": "MIT",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anuragbhatt1805/TrustHive.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "build": "node build.js",
     "lint": "eslint src/**/*.ts",
