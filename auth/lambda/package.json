@@ -1,6 +1,6 @@
 {
   "name": "@trusthive/auth-lambda",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Authentication Lambda Functions for TrustHive",
   "main": "index.js",
   "author": "Anurag Bhatt",
@@ -19,7 +19,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@trusthive/interface-types": "^1.1.0"
+    "@trusthive/interface-types": "^1.2.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.152",

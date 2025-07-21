@@ -1,6 +1,6 @@
 {
   "name": "@trusthive/auth-service",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Authentication Services for TrustHive",
   "main": "index.ts",
   "author": "Anurag Bhatt",
@@ -21,8 +21,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@trusthive/interface-types": "^1.1.0",
-    "@trusthive/prisma-config": "^1.1.0",
+    "@trusthive/interface-types": "^1.2.0",
+    "@trusthive/prisma-config": "^1.2.0",
     "express": "^5.1.0"
   },
   "devDependencies": {
