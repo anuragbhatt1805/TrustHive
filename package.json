@@ -1,0 +1,24 @@
+{
+  "name": "trusthive",
+  "version": "1.0.0",
+  "description": "Open Source micro-service based banking application",
+  "author": "Anurag Bhatt",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "auth/service",
+    "auth/lambda",
+    "common/interface",
+    "common/prisma"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.5"
+  },
+  "packageManager": "yarn@1.22.19"
+}

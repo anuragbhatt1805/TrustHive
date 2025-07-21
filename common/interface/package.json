@@ -1,0 +1,29 @@
+{
+  "name": "@trusthive/interface-types",
+  "version": "1.0.0",
+  "description": "Shared TypeScript interfaces for TrustHive microservices",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Anurag Bhatt",
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anuragbhatt1805/TrustHive.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "prepublishOnly": "npm run build",
+    "publish-package": "./publish.sh"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

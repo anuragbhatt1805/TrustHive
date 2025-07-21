@@ -1,0 +1,30 @@
+{
+  "name": "@trusthive/auth-service",
+  "version": "1.0.0",
+  "description": "Authentication Services for TrustHive",
+  "main": "index.ts",
+  "author": "Anurag Bhatt",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "node build.js",
+    "dev": "tsx src/index.ts",
+    "start": "node build/index.js",
+    "lint": "eslint src/**/*.ts",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "@trusthive/interface-types": "*"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.15",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
+    "esbuild": "^0.25.8",
+    "eslint": "^9.31.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
