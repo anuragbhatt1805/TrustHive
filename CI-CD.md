@@ -86,7 +86,7 @@ Each service version creates a corresponding Git tag:
 
 | Secret | Description | Usage |
 |--------|-------------|-------|
-| `NPM_TOKEN` | GitHub Personal Access Token | Package publishing to GitHub Package Registry |
+| `NPM_TOKEN` | Fine-grained GitHub Personal Access Token | Package publishing, Git operations (push/tags), and GitHub Package Registry |
 
 ### Permissions Required
 
