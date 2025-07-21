@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "express": "^5.1.0",
-    "@trusthive/interface-types": "*"
+    "@trusthive/interface-types": "*",
+    "@trusthive/prisma-config": "*"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

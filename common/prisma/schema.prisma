@@ -1,0 +1,197 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User authentication and profile
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  phone     String?  @unique
+  isActive  Boolean  @default(true)
+  role      UserRole @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  profile   UserProfile?
+  accounts  Account[]
+  transactions Transaction[] @relation("UserTransactions")
+  sessions  UserSession[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  firstName   String?
+  lastName    String?
+  dateOfBirth DateTime?
+  address     String?
+  city        String?
+  state       String?
+  zipCode     String?
+  country     String?  @default("US")
+  kycStatus   KYCStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model UserSession {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  refreshToken String?  @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  isActive     Boolean  @default(true)
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+// Banking accounts
+model Account {
+  id            String        @id @default(cuid())
+  userId        String
+  accountNumber String        @unique
+  accountType   AccountType   @default(SAVINGS)
+  balance       Decimal       @default(0) @db.Decimal(15, 2)
+  currency      String        @default("USD")
+  status        AccountStatus @default(ACTIVE)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  user             User          @relation(fields: [userId], references: [id])
+  fromTransactions Transaction[] @relation("FromAccount")
+  toTransactions   Transaction[] @relation("ToAccount")
+
+  @@map("accounts")
+}
+
+// Transactions
+model Transaction {
+  id              String            @id @default(cuid())
+  userId          String
+  fromAccountId   String?
+  toAccountId     String?
+  type            TransactionType
+  amount          Decimal           @db.Decimal(15, 2)
+  currency        String            @default("USD")
+  description     String?
+  reference       String?           @unique
+  status          TransactionStatus @default(PENDING)
+  processedAt     DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relations
+  user        User     @relation("UserTransactions", fields: [userId], references: [id])
+  fromAccount Account? @relation("FromAccount", fields: [fromAccountId], references: [id])
+  toAccount   Account? @relation("ToAccount", fields: [toAccountId], references: [id])
+
+  @@map("transactions")
+}
+
+// Cards
+model Card {
+  id            String     @id @default(cuid())
+  userId        String
+  cardNumber    String     @unique
+  cardType      CardType   @default(DEBIT)
+  expiryDate    DateTime
+  isActive      Boolean    @default(true)
+  dailyLimit    Decimal?   @db.Decimal(10, 2)
+  monthlyLimit  Decimal?   @db.Decimal(15, 2)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@map("cards")
+}
+
+// Enums
+enum UserRole {
+  ADMIN
+  MANAGER
+  CUSTOMER
+  SUPPORT
+
+  @@map("user_role")
+}
+
+enum KYCStatus {
+  PENDING
+  IN_PROGRESS
+  APPROVED
+  REJECTED
+  EXPIRED
+
+  @@map("kyc_status")
+}
+
+enum AccountType {
+  SAVINGS
+  CHECKING
+  BUSINESS
+  INVESTMENT
+
+  @@map("account_type")
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  CLOSED
+
+  @@map("account_status")
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  TRANSFER
+  PAYMENT
+  REFUND
+  FEE
+
+  @@map("transaction_type")
+}
+
+enum TransactionStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+
+  @@map("transaction_status")
+}
+
+enum CardType {
+  DEBIT
+  CREDIT
+  PREPAID
+
+  @@map("card_type")
+}
