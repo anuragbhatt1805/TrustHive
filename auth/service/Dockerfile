@@ -36,57 +36,59 @@ RUN echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc && \
 # Copy source code and build files
 COPY . .
 
-# Build the application
-RUN yarn build
+RUN ls -la
 
-# Production stage
-FROM node:18-alpine AS production
+# # Build the application
+# RUN yarn build
 
-WORKDIR /app
+# # Production stage
+# FROM node:18-alpine AS production
 
-# Install dumb-init
-RUN apk add --no-cache dumb-init
+# WORKDIR /app
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S trusthive -u 1001
+# # Install dumb-init
+# RUN apk add --no-cache dumb-init
 
-# Copy package files
-COPY package*.json ./
+# # Create non-root user
+# RUN addgroup -g 1001 -S nodejs
+# RUN adduser -S trusthive -u 1001
 
-# Copy yarn.lock from root if it exists, otherwise use local one
-COPY ../../yarn.lock* ./yarn.lock*
-COPY yarn.lock* ./
+# # Copy package files
+# COPY package*.json ./
 
-# Configure NPM for GitHub Package Registry and install production dependencies
-ARG NPM_TOKEN
-RUN echo "@trusthive:registry=https://npm.pkg.github.com" >> .npmrc && \
-    echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc && \
-    # Wait for packages to be available (retry mechanism)
-    for i in {1..10}; do \
-        echo "Attempt $i: Installing production dependencies..." && \
-        yarn install --production --frozen-lockfile && \
-        yarn cache clean && break || \
-        (echo "Failed attempt $i, waiting 30s..." && sleep 30); \
-    done && \
-    rm .npmrc
+# # Copy yarn.lock from root if it exists, otherwise use local one
+# COPY ../../yarn.lock* ./yarn.lock*
+# COPY yarn.lock* ./
 
-# Copy the built application from build stage
-COPY --from=base /app/build ./build/
+# # Configure NPM for GitHub Package Registry and install production dependencies
+# ARG NPM_TOKEN
+# RUN echo "@trusthive:registry=https://npm.pkg.github.com" >> .npmrc && \
+#     echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc && \
+#     # Wait for packages to be available (retry mechanism)
+#     for i in {1..10}; do \
+#         echo "Attempt $i: Installing production dependencies..." && \
+#         yarn install --production --frozen-lockfile && \
+#         yarn cache clean && break || \
+#         (echo "Failed attempt $i, waiting 30s..." && sleep 30); \
+#     done && \
+#     rm .npmrc
 
-# Change ownership to non-root user
-RUN chown -R trusthive:nodejs /app
-USER trusthive
+# # Copy the built application from build stage
+# COPY --from=base /app/build ./build/
 
-# Expose port
-EXPOSE 3000
+# # Change ownership to non-root user
+# RUN chown -R trusthive:nodejs /app
+# USER trusthive
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "const http=require('http');http.get('http://localhost:3000/',res=>process.exit(res.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+# # Expose port
+# EXPOSE 3000
 
-# Use dumb-init to handle signals properly
-ENTRYPOINT ["dumb-init", "--"]
+# # Health check
+# HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+#     CMD node -e "const http=require('http');http.get('http://localhost:3000/',res=>process.exit(res.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 
-# Start the application
-CMD ["node", "build/index.js"]
+# # Use dumb-init to handle signals properly
+# ENTRYPOINT ["dumb-init", "--"]
+
+# # Start the application
+# CMD ["node", "build/index.js"]

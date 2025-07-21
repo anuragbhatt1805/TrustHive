@@ -4,13 +4,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Source files (we only need built files)
-src
-*.ts
-tsconfig.json
-eslint.config.js
-build.js
-
 # Development files
 .env.local
 .env.development.local
