@@ -244,15 +244,22 @@ jobs:
         run: |
           echo "📦 Publishing common packages to GitHub Package Registry..."
           
-          # Find and publish all common packages
-          find common -name "package.json" -type f | while read pkg; do
+          CURRENT_DIR=$(pwd)
+          
+          # Find and publish all common packages (exclude generated directories)
+          find common -name "package.json" -type f -not -path "*/generated/*" -not -path "*/node_modules/*" | while read pkg; do
             DIR=$(dirname "$pkg")
-            PKG_NAME=$(node -p "require('$pkg').name" 2>/dev/null || echo "")
-            PKG_VERSION=$(node -p "require('$pkg').version" 2>/dev/null || echo "")
+            FULL_PKG_PATH="$CURRENT_DIR/$pkg"
             
-            if [ -n "$PKG_NAME" ] && [ "$PKG_NAME" != "trusthive" ]; then
+            # Get package info using absolute path
+            PKG_NAME=$(node -e "try { console.log(require('$FULL_PKG_PATH').name); } catch(e) { console.log(''); }")
+            PKG_VERSION=$(node -e "try { console.log(require('$FULL_PKG_PATH').version); } catch(e) { console.log(''); }")
+            
+            if [ -n "$PKG_NAME" ] && [ "$PKG_NAME" != "trusthive" ] && [[ "$PKG_NAME" == @trusthive/* ]]; then
               echo "Publishing $PKG_NAME@$PKG_VERSION from $DIR..."
-              cd "$DIR"
+              
+              # Change to package directory
+              cd "$CURRENT_DIR/$DIR"
               
               if [ -f "publish.sh" ]; then
                 chmod +x publish.sh
@@ -265,7 +272,10 @@ jobs:
                 rm -f .npmrc
               fi
               
-              cd - > /dev/null
+              # Return to original directory
+              cd "$CURRENT_DIR"
+            else
+              echo "Skipping $PKG_NAME (not a TrustHive package or empty)"
             fi
           done
           
