@@ -2,7 +2,6 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "independent",
   "npmClient": "yarn",
-  "useWorkspaces": true,
   "packages": [
     "auth/*",
     "common/*"
@@ -19,8 +18,7 @@
         "**/tests/**",
         "**/__tests__/**",
         "**/stories/**"
-      ],
-      "forcePublish": "*"
+      ]
     },
     "publish": {
       "registry": "https://npm.pkg.github.com",
