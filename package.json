@@ -17,6 +17,7 @@
     "check-types": "turbo run check-types",
     "test": "turbo run test",
     "lerna:version": "node scripts/lerna-version-custom.js",
+    "lerna:version-ci": "node scripts/lerna-version-ci.js",
     "lerna:list": "node scripts/lerna-list-services.js",
     "lerna:publish": "lerna publish from-package --registry https://npm.pkg.github.com",
     "lerna:changed": "lerna changed",

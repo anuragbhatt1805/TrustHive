@@ -1,0 +1,243 @@
+name: Release and Version
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '18'
+  DATABASE_URL: "postgresql://postgres:12345678@localhost:5432/trusthive_ci"
+
+jobs:
+  version:
+    name: Version and Release
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'chore(release):')"
+    
+    outputs:
+      version-updated: ${{ steps.version-check.outputs.version-updated }}
+      auth-service-version: ${{ steps.get-versions.outputs.auth-service-version }}
+      auth-lambda-version: ${{ steps.get-versions.outputs.auth-lambda-version }}
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: 12345678
+          POSTGRES_USER: postgres
+          POSTGRES_DB: trusthive_ci
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: |
+          cd common/prisma
+          npx prisma generate
+          npx prisma db push
+
+      - name: Check for changes
+        id: version-check
+        run: |
+          CHANGED=$(yarn lerna:changed --loglevel silent | wc -l)
+          echo "Changed packages: $CHANGED"
+          if [ $CHANGED -gt 0 ]; then
+            echo "version-updated=true" >> $GITHUB_OUTPUT
+            echo "📦 Changes detected - will version packages"
+          else
+            echo "version-updated=false" >> $GITHUB_OUTPUT
+            echo "✨ No changes detected - skipping versioning"
+          fi
+
+      - name: Version packages
+        if: steps.version-check.outputs.version-updated == 'true'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "🚀 Running Lerna versioning..."
+          yarn lerna:version-ci
+
+      - name: Get current versions
+        id: get-versions
+        run: |
+          AUTH_SERVICE_VERSION=$(node -p "require('./auth/service/package.json').version")
+          AUTH_LAMBDA_VERSION=$(node -p "require('./auth/lambda/package.json').version")
+          echo "auth-service-version=$AUTH_SERVICE_VERSION" >> $GITHUB_OUTPUT
+          echo "auth-lambda-version=$AUTH_LAMBDA_VERSION" >> $GITHUB_OUTPUT
+          echo "Auth Service version: $AUTH_SERVICE_VERSION"
+          echo "Auth Lambda version: $AUTH_LAMBDA_VERSION"
+
+      - name: Build packages
+        if: steps.version-check.outputs.version-updated == 'true'
+        run: yarn build
+
+      - name: Create release commit
+        if: steps.version-check.outputs.version-updated == 'true'
+        run: |
+          git add .
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(release): publish packages [skip ci]
+
+            - @trusthive/auth-service@${{ steps.get-versions.outputs.auth-service-version }}
+            - @trusthive/auth-lambda@${{ steps.get-versions.outputs.auth-lambda-version }}"
+            
+            # Create tags for services
+            git tag -a "auth-service@${{ steps.get-versions.outputs.auth-service-version }}" -m "Auth Service v${{ steps.get-versions.outputs.auth-service-version }}"
+            git tag -a "auth-lambda@${{ steps.get-versions.outputs.auth-lambda-version }}" -m "Auth Lambda v${{ steps.get-versions.outputs.auth-lambda-version }}"
+          fi
+
+      - name: Push changes and tags
+        if: steps.version-check.outputs.version-updated == 'true'
+        run: |
+          git push origin main
+          git push origin --tags
+
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    needs: version
+    if: needs.version.outputs.version-updated == 'true'
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: 12345678
+          POSTGRES_USER: postgres
+          POSTGRES_DB: trusthive_ci
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: |
+          cd common/prisma
+          npx prisma generate
+          npx prisma db push
+
+      - name: Lint and build
+        run: |
+          yarn lint
+          yarn build
+
+      - name: Publish common packages
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "📦 Publishing common packages..."
+          cd common/interface
+          if [ -f "publish.sh" ]; then
+            chmod +x publish.sh
+            ./publish.sh || echo "Interface package publish failed or already exists"
+          fi
+          
+          cd ../prisma
+          if [ -f "publish.sh" ]; then
+            chmod +x publish.sh
+            ./publish.sh || echo "Prisma package publish failed or already exists"
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push auth-service Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./auth/service
+          file: ./auth/service/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/trusthive-auth-service:latest
+            ghcr.io/${{ github.repository_owner }}/trusthive-auth-service:v${{ needs.version.outputs.auth-service-version }}
+          labels: |
+            org.opencontainers.image.title=TrustHive Auth Service
+            org.opencontainers.image.description=Authentication service for TrustHive banking platform
+            org.opencontainers.image.version=v${{ needs.version.outputs.auth-service-version }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Upload Lambda artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-lambda-v${{ needs.version.outputs.auth-lambda-version }}
+          path: auth/lambda/build/auth-lambda.zip
+          retention-days: 7
+
+      - name: Generate deployment summary
+        run: |
+          echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Package Versions" >> $GITHUB_STEP_SUMMARY
+          echo "- **Auth Service**: v${{ needs.version.outputs.auth-service-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Auth Lambda**: v${{ needs.version.outputs.auth-lambda-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🐳 Docker Images" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ghcr.io/${{ github.repository_owner }}/trusthive-auth-service:v${{ needs.version.outputs.auth-service-version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ghcr.io/${{ github.repository_owner }}/trusthive-auth-service:latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📁 Lambda Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- **auth-lambda-v${{ needs.version.outputs.auth-lambda-version }}** (Available for 7 days)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🏷️ Git Tags" >> $GITHUB_STEP_SUMMARY
+          echo "- \`auth-service@${{ needs.version.outputs.auth-service-version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`auth-lambda@${{ needs.version.outputs.auth-lambda-version }}\`" >> $GITHUB_STEP_SUMMARY

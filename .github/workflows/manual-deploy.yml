@@ -1,0 +1,60 @@
+name: Manual Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      services:
+        description: 'Services to deploy (comma-separated)'
+        required: true
+        default: 'auth-service,auth-lambda'
+        type: string
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  deploy:
+    name: Manual Deployment
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build packages
+        run: yarn build
+
+      - name: Parse services input
+        id: parse-services
+        run: |
+          SERVICES="${{ github.event.inputs.services }}"
+          echo "services=$SERVICES" >> $GITHUB_OUTPUT
+          echo "Deploying services: $SERVICES to ${{ github.event.inputs.environment }}"
+
+      - name: Deployment summary
+        run: |
+          echo "## 🚀 Manual Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Services**: ${{ github.event.inputs.services }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by**: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ **Note**: Deployment logic needs to be implemented based on your infrastructure." >> $GITHUB_STEP_SUMMARY
