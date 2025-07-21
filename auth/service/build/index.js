@@ -6188,12 +6188,12 @@ var require_dist = __commonJS({
 
 // src/index.ts
 var import_express = __toESM(require("express"));
-var import_prisma_config = __toESM(require_dist());
+var import_trusthive_prisma_config = __toESM(require_dist());
 var app = (0, import_express.default)();
 var port = process.env.PORT || 3e3;
 app.use(import_express.default.json());
 app.get("/", async (_req, res) => {
-  const healthCheck = await import_prisma_config.DatabaseUtils.healthCheck();
+  const healthCheck = await import_trusthive_prisma_config.DatabaseUtils.healthCheck();
   const response = {
     success: true,
     message: "Hello World from TrustHive Auth Service!",
@@ -6207,7 +6207,7 @@ app.get("/", async (_req, res) => {
 });
 app.post("/login", async (req, res) => {
   const loginRequest = req.body;
-  const validation = import_prisma_config.Validators.validateLoginInput(loginRequest.email, loginRequest.password);
+  const validation = import_trusthive_prisma_config.Validators.validateLoginInput(loginRequest.email, loginRequest.password);
   if (!validation.valid) {
     const response = {
       success: false,
@@ -6219,7 +6219,7 @@ app.post("/login", async (req, res) => {
     return;
   }
   try {
-    const user = await import_prisma_config.UserService.findUserByEmail(loginRequest.email);
+    const user = await import_trusthive_prisma_config.UserService.findUserByEmail(loginRequest.email);
     if (!user || user.password !== loginRequest.password) {
       const response2 = {
         success: false,
@@ -6256,7 +6256,7 @@ app.post("/login", async (req, res) => {
 });
 app.post("/register", async (req, res) => {
   const registerRequest = req.body;
-  const validation = import_prisma_config.Validators.validateRegistrationInput(registerRequest);
+  const validation = import_trusthive_prisma_config.Validators.validateRegistrationInput(registerRequest);
   if (!validation.valid) {
     const response = {
       success: false,
@@ -6268,7 +6268,7 @@ app.post("/register", async (req, res) => {
     return;
   }
   try {
-    const existingUser = await import_prisma_config.UserService.findUserByEmail(registerRequest.email);
+    const existingUser = await import_trusthive_prisma_config.UserService.findUserByEmail(registerRequest.email);
     if (existingUser) {
       const response2 = {
         success: false,
@@ -6278,7 +6278,7 @@ app.post("/register", async (req, res) => {
       res.status(409).json(response2);
       return;
     }
-    const user = await import_prisma_config.UserService.createUser({
+    const user = await import_trusthive_prisma_config.UserService.createUser({
       email: registerRequest.email,
       password: registerRequest.password,
       // In production, hash the password
