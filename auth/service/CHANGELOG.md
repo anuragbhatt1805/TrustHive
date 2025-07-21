@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.1](https://github.com/anuragbhatt1805/TrustHive/compare/trusthive-auth-service@1.7.0...trusthive-auth-service@1.7.1) (2025-07-21)
+
+**Note:** Version bump only for package trusthive-auth-service
+
+
+
+
+
 # 1.7.0 (2025-07-21)
 
 
