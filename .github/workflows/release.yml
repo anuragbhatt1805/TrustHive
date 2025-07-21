@@ -128,8 +128,10 @@ jobs:
           echo "Detected services:"
           echo "$SERVICES" | jq .
           
-          # Output for matrix
-          echo "services-matrix=$SERVICES" >> $GITHUB_OUTPUT
+          # Output for matrix - properly escape the JSON
+          echo "services-matrix<<EOF" >> $GITHUB_OUTPUT
+          echo "$SERVICES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Build packages
         if: steps.version-check.outputs.version-updated == 'true'
