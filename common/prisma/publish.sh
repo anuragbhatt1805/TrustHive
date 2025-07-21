@@ -9,7 +9,7 @@ echo "Setting up GitHub Package Registry configuration..."
 # Create .npmrc temporarily for publishing
 cat > .npmrc << NPMRC_EOF
 @trusthive:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=\${NPM_TOKEN}
+//npm.pkg.github.com/:_authToken=${NPM_TOKEN}
 NPMRC_EOF
 
 echo "Publishing to GitHub Package Registry..."
@@ -22,9 +22,15 @@ if [ -z "$NPM_TOKEN" ]; then
     exit 1
 fi
 
-npm publish --registry=https://npm.pkg.github.com
+if npm publish --registry=https://npm.pkg.github.com --userconfig=.npmrc; then
+    echo "✅ Published successfully!"
+    EXIT_CODE=0
+else
+    echo "❌ Publishing failed!"
+    EXIT_CODE=1
+fi
 
 # Clean up
 rm .npmrc
 
-echo "Published successfully!"
+exit $EXIT_CODE

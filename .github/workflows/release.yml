@@ -256,26 +256,47 @@ jobs:
             PKG_VERSION=$(node -e "try { console.log(require('$FULL_PKG_PATH').version); } catch(e) { console.log(''); }")
             
             if [ -n "$PKG_NAME" ] && [ "$PKG_NAME" != "trusthive" ] && [[ "$PKG_NAME" == @trusthive/* ]]; then
-              echo "Publishing $PKG_NAME@$PKG_VERSION from $DIR..."
+              echo "📦 Publishing $PKG_NAME@$PKG_VERSION from $DIR..."
               
               # Change to package directory
               cd "$CURRENT_DIR/$DIR"
               
+              PUBLISH_SUCCESS=false
+              
               if [ -f "publish.sh" ]; then
                 chmod +x publish.sh
-                ./publish.sh || echo "⚠️ Package $PKG_NAME publish failed or already exists"
+                if ./publish.sh; then
+                  echo "✅ $PKG_NAME published successfully using publish.sh"
+                  PUBLISH_SUCCESS=true
+                else
+                  echo "❌ $PKG_NAME publish failed using publish.sh"
+                fi
               else
                 # Fallback: publish directly with npm
+                echo "📝 Using npm publish fallback for $PKG_NAME"
                 echo "@trusthive:registry=https://npm.pkg.github.com" > .npmrc
                 echo "//npm.pkg.github.com/:_authToken=$NPM_TOKEN" >> .npmrc
-                npm publish --registry=https://npm.pkg.github.com || echo "⚠️ Package $PKG_NAME publish failed or already exists"
+                
+                if npm publish --registry=https://npm.pkg.github.com --userconfig=.npmrc 2>&1; then
+                  echo "✅ $PKG_NAME published successfully using npm"
+                  PUBLISH_SUCCESS=true
+                else
+                  echo "❌ $PKG_NAME publish failed using npm"
+                fi
+                
                 rm -f .npmrc
+              fi
+              
+              if [ "$PUBLISH_SUCCESS" = true ]; then
+                echo "🎉 Successfully published $PKG_NAME@$PKG_VERSION"
+              else
+                echo "⚠️ Failed to publish $PKG_NAME@$PKG_VERSION (may already exist)"
               fi
               
               # Return to original directory
               cd "$CURRENT_DIR"
             else
-              echo "Skipping $PKG_NAME (not a TrustHive package or empty)"
+              echo "⏭️ Skipping $PKG_NAME (not a TrustHive package or empty)"
             fi
           done
           
