@@ -256,7 +256,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/anurag/WorkSpace/TrustHive/common/prisma/generated/client",
+      "value": "/home/runner/work/TrustHive/TrustHive/common/prisma/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -270,12 +270,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/anurag/WorkSpace/TrustHive/common/prisma/schema.prisma",
+    "sourceFilePath": "/home/runner/work/TrustHive/TrustHive/common/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../..",
   "clientVersion": "5.22.0",
